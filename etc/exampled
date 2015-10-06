@@ -17,17 +17,23 @@ DESC="Daemon for my magnificent PHP CLI script"
 PIDFILE="/var/run/${NAME}.pid"
 LOGFILE="/var/log/${NAME}.log"
 
-DAEMON="/usr/bin/php"
-DAEMON_OPTS="/php-project/example.php"
+DAEMON="/php-project/example.php"
+DAEMON_OPTS=""
 
 START_OPTS="--start --background --make-pidfile --pidfile ${PIDFILE} --exec ${DAEMON} ${DAEMON_OPTS}"
 STOP_OPTS="--stop --pidfile ${PIDFILE}"
+STATUS_OPTS="--stop --pidfile ${PIDFILE}"
 
 test -x $DAEMON || exit 0
 
 set -e
 
 case "$1" in
+    status)
+        echo -n "Status ${DESC}: "
+        start-stop-daemon $STATUS_OPTS
+        echo $?
+        ;;
     start)
         echo -n "Starting ${DESC}: "
         start-stop-daemon $START_OPTS >> $LOGFILE
@@ -48,7 +54,7 @@ case "$1" in
         ;;
     *)
         N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
         exit 1
         ;;
 esac
