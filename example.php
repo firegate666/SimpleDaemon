@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 
 use firegate666\Logger\ConsoleLogger;
