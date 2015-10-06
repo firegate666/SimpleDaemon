@@ -1,5 +1,7 @@
 <?php
 
+declare(ticks = 1);
+
 namespace firegate666\Daemon\Example;
 
 use firegate666\Daemon\HandlerInterface;
@@ -37,7 +39,7 @@ class Handler implements HandlerInterface
 	public function runLoop()
 	{
 		while (!$this->shutdown) {
-			$this->log(LogLevel::INFO, 'child does some work');
+			pcntl_signal_dispatch();
 			sleep(1);
 		}
 	}

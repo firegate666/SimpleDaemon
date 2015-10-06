@@ -25,7 +25,7 @@ class Daemon
 	protected $logger;
 
 	/**
-	 * @param HandlerInterface $handler_factory
+	 * @param HandlerFactoryInterface $handler_factory
 	 * @param Configuration $configuration
 	 */
 	public function __construct(HandlerFactoryInterface $handler_factory, Configuration $configuration)
@@ -61,14 +61,16 @@ class Daemon
 
 	public function run()
 	{
+		$this->log(LogLevel::INFO, 'daemon started ' . posix_getpid());
 		while (!$this->shutdown) {
+			pcntl_signal_dispatch();
+
 			if (count($this->childPids) < $this->configuration->numChildren) { // start children until we have enough
 				$pid = pcntl_fork();
 				if ($pid == -1) {
 					$this->log(LogLevel::ERROR, 'error forking child');
 				} else if ($pid) {
 					$this->log(LogLevel::INFO, 'child forked ' .$pid);
-					print "started child " . $pid . PHP_EOL;
 					$this->childPids[$pid] = $pid;
 				} else {
 					$handler = $this->handler_factory->create();
@@ -76,18 +78,24 @@ class Daemon
 					exit();
 				}
 			} else {
-				$childPid = pcntl_waitpid (-1, $status);
-				$this->log(LogLevel::WARNING, "child exit received " . $childPid);
-				unset($this->childPids[$childPid]);
+				$childPid = pcntl_waitpid (-1, $status, WNOHANG);
+
+				if ($childPid) {
+					$this->log(LogLevel::WARNING, "child exit received " . $childPid);
+					unset($this->childPids[$childPid]);
+				}
+
 				sleep(1);
 			}
 		}
 
-		$this->log(LogLevel::INFO, 'waiting for children to terminate');
+		if (count($this->childPids)) {
+			$this->log(LogLevel::INFO, 'waiting for children to terminate');
 
-		while (count($this->childPids)) {
-			$childPid = pcntl_waitpid (-1, $status);
-			$this->onChildExit($childPid);
+			while (count($this->childPids)) {
+				$childPid = pcntl_waitpid(-1, $status);
+				$this->onChildExit($childPid);
+			}
 		}
 
 		exit();
@@ -113,6 +121,8 @@ class Daemon
 	 */
 	public function sigHandler($signo)
 	{
+		$this->log(LogLevel::DEBUG, 'signal received ' .$signo);
+
 		switch ($signo) {
 			case SIGINT:
 				$this->sigInt();
