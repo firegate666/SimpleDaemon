@@ -1,0 +1,21 @@
+{
+    "name": "firegate666/daemon",
+    "description": "Simple PHP daemon wrapper for your custom handler",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Marco Behnke",
+            "email": "marco@behnke.biz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "firegate666\\": "src/"
+        }
+    },
+    "require": {
+        "psr/log" : "1.0.0"
+    }
+}
