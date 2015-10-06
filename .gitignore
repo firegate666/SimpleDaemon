@@ -50,3 +50,4 @@ crashlytics-build.properties
 
 /vagrant/.vagrant
 /vendor
+/logs
