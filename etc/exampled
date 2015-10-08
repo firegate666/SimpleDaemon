@@ -17,7 +17,7 @@ DESC="Daemon for my magnificent PHP CLI script"
 PIDFILE="/var/run/${NAME}.pid"
 LOGFILE="/var/log/${NAME}.log"
 
-DAEMON="/php-project/example.php"
+DAEMON="/php-project/exampled.php"
 DAEMON_OPTS=""
 
 START_OPTS="--start --background --make-pidfile --pidfile ${PIDFILE} --exec ${DAEMON} ${DAEMON_OPTS}"
