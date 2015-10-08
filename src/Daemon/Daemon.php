@@ -7,6 +7,16 @@ namespace firegate666\Daemon;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
+/**
+ * This is the main daemon loop, or the so called observer.
+ * He is responsible for starting and stopping the handler children
+ *
+ * @example
+ *  $handler_factory = new HandlerFactory();
+ *  $configuration = new Configuration();
+ *  $daemon = new Daemon($handler_factory, $configuration);
+ *  $daemon->run();
+ */
 class Daemon
 {
     /** @var Configuration */
@@ -59,6 +69,10 @@ class Daemon
         }
     }
 
+    /**
+     * The core loop of this daemon
+     * Handles forking of daemon handlers up to a defined max and then waits for their termination
+     */
     public function run()
     {
         $this->log(LogLevel::INFO, 'daemon started ' . posix_getpid());
@@ -92,33 +106,67 @@ class Daemon
         }
 
         if (count($this->childPids)) {
-            $this->log(LogLevel::INFO, 'waiting for children to terminate');
+            $this->log(LogLevel::INFO, 'still ' . count($this->childPids) . ' living children');
+
+            $time = time();
 
             while (count($this->childPids)) {
-                $childPid = pcntl_waitpid(-1, $status);
+                $this->log(LogLevel::INFO, 'waiting for children to terminate: ' . var_export($this->childPids, true));
+                pcntl_signal_dispatch();
+
+                $childPid = pcntl_waitpid(-1, $status, WNOHANG);
                 $this->onChildExit($childPid);
+
+                if (time() - $time > 5) { // after waiting 5 seconds skip to kill
+                    break;
+                }
+
+                usleep(100);
             }
+
+            $this->log(LogLevel::INFO, 'trying to kill remaining children: ' . var_export($this->childPids));
+            $this->sendSignalToChildren(SIGKILL);
         }
 
+        $this->log(LogLevel::INFO, 'daemon shutdown');
         exit();
     }
 
+    /**
+     * handler if a child dies
+     * removes the child from the list
+     *
+     * @param int $childPid
+     */
     protected function onChildExit($childPid)
     {
         $this->log(LogLevel::INFO, 'child ' . $childPid . ' exited');
         unset($this->childPids[$childPid]);
     }
 
+    /**
+     * switch to shutdown mode, send shutdown to children
+     */
     protected function shutdown()
     {
         $this->shutdown = true;
+        $this->sendSignalToChildren(SIGTERM);
+    }
 
+    /**
+     * send signal to all children
+     */
+    protected function sendSignalToChildren($signo)
+    {
         foreach ($this->childPids as $childPid) {
-            posix_kill($childPid, SIGTERM);
+            posix_kill($childPid, $signo);
         }
     }
 
     /**
+     * signal handler for this daemon
+     * reacts upon SIGINT, SIGTERM and SIGCHLD
+     *
      * @param int $signo
      */
     public function sigHandler($signo)
@@ -138,32 +186,47 @@ class Daemon
         }
     }
 
+    /**
+     * SIGCHLD handler
+     */
     protected function sigChild()
     {
         $this->log(LogLevel::DEBUG, 'sigchild received');
 
-        while (($childPid = pcntl_wait($status, WNOHANG)) > 0) {
+        while (($childPid = pcntl_waitpid(-1, $status, WNOHANG)) > 0) {
             $this->onChildExit($childPid);
         }
     }
 
+    /**
+     * SIGINT handler, switch to shutdown
+     */
     protected function sigInt()
     {
         $this->log(LogLevel::DEBUG, 'sigint received');
         $this->shutdown();
     }
 
+    /**
+     * SIGTERM handler, switch to shutdown
+     */
     protected function sigTerm()
     {
         $this->log(LogLevel::DEBUG, 'sigterm received');
         $this->shutdown();
     }
 
+    /**
+     * basic initializer
+     */
     protected function initialize()
     {
         $this->registerSignals();
     }
 
+    /**
+     * register signals
+     */
     protected function registerSignals()
     {
         pcntl_signal(SIGINT, [$this, 'sigHandler']);

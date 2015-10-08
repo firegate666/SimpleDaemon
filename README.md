@@ -25,6 +25,5 @@ If the daemon itself receives a shutdown signal (SIGTERM, SIGINT), this signal i
 
 ## ToDos
 
-- daemon should only wait a decent amount of time for his children to terminate and then fire SIGKILL
 - too many children died in short amount of time detection
 - add supervisor example (http://supervisord.org/)
