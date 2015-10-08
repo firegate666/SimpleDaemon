@@ -6,18 +6,18 @@ use Psr\Log\LoggerInterface;
 
 interface HandlerInterface
 {
-	/**
-	 * @param LoggerInterface $logger
-	 */
-	public function setLogger($logger);
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger($logger);
 
-	/**
-	 *
-	 */
-	public function runLoop();
+    /**
+     *
+     */
+    public function runLoop();
 
-	/**
-	 * @param int $signo
-	 */
-	public function sigHandler($signo);
+    /**
+     * @param int $signo
+     */
+    public function sigHandler($signo);
 }

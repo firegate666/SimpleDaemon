@@ -8,25 +8,25 @@ use Psr\Log\LoggerInterface;
 
 class HandlerFactory implements HandlerFactoryInterface
 {
-	/** @var LoggerInterface */
-	protected $logger;
+    /** @var LoggerInterface */
+    protected $logger;
 
-	/**
-	 * @param LoggerInterface $logger
-	 */
-	public function setLogger(LoggerInterface $logger)
-	{
-		$this->logger = $logger;
-	}
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
-	/**
-	 * @return HandlerInterface
-	 */
-	public function create()
-	{
-		$handler = new Handler();
-		$handler->setLogger($this->logger);
+    /**
+     * @return HandlerInterface
+     */
+    public function create()
+    {
+        $handler = new Handler();
+        $handler->setLogger($this->logger);
 
-		return $handler;
-	}
+        return $handler;
+    }
 }
