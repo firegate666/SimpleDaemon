@@ -6,6 +6,9 @@ use firegate666\Daemon\HandlerFactoryInterface;
 use firegate666\Daemon\HandlerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Example daemon handler factory
+ */
 class HandlerFactory implements HandlerFactoryInterface
 {
     /** @var LoggerInterface */

@@ -8,6 +8,9 @@ use firegate666\Daemon\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
+/**
+ * Example daemon handler
+ */
 class Handler implements HandlerInterface
 {
 
@@ -18,7 +21,7 @@ class Handler implements HandlerInterface
     protected $shutdown = false;
 
     /**
-     *
+     * constructor initializes the handler
      */
     public function __construct()
     {
@@ -34,7 +37,8 @@ class Handler implements HandlerInterface
     }
 
     /**
-     *
+     * Main working loop of the daemon
+     * This example daemon does a sleep 1 every time
      */
     public function runLoop()
     {
@@ -45,7 +49,7 @@ class Handler implements HandlerInterface
     }
 
     /**
-     *
+     * Send a shutdown log entry and switch to shutdown mode, will quit the loop
      */
     protected function shutdown()
     {
@@ -68,6 +72,9 @@ class Handler implements HandlerInterface
     }
 
     /**
+     * This one is responsible for handling all incoming signals.
+     * Has a handling for SIGTERM and SIGINT, initializes shutdown.
+     *
      * @param int $signo
      */
     public function sigHandler($signo)
@@ -81,7 +88,7 @@ class Handler implements HandlerInterface
     }
 
     /**
-     *
+     * basic initializer
      */
     protected function initialize()
     {
@@ -89,7 +96,7 @@ class Handler implements HandlerInterface
     }
 
     /**
-     *
+     * register signals for SIGTERM and SIGINT
      */
     protected function registerSignals()
     {
