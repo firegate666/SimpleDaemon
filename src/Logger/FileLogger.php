@@ -2,14 +2,17 @@
 
 namespace firegate666\Logger;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
-
-class FileLogger implements LoggerInterface
+/**
+ * Simple implementation of logger interface, just logging everything to a file, log level prepended
+ */
+class FileLogger extends AbstractSimpleLogger
 {
 
     /** @var string */
     protected $filename;
+
+    /** @var bool */
+    private $directoryCreated = false;
 
     /**
      * @param string $filename
@@ -17,113 +20,6 @@ class FileLogger implements LoggerInterface
     public function __construct($filename)
     {
         $this->filename = $filename;
-    }
-
-    /**
-     * System is unusable.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function emergency($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function alert($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function critical($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function error($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function warning($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Normal but significant events.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function notice($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Interesting events.
-     *
-     * Example: User logs in, SQL logs.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function info($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Detailed debug information.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function debug($message, array $context = array())
-    {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
     /**
@@ -136,11 +32,22 @@ class FileLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        $file = fopen($this->filename, 'a+');
-        if (flock($file, LOCK_EX)) {
-            fwrite($file, $level . ': ' . $message . PHP_EOL);
-            flock($file, LOCK_UN);
+        $this->createLogDir();
+        file_put_contents($this->filename, $message . PHP_EOL, FILE_APPEND);
+    }
+
+    /**
+     * create log directory
+     */
+    protected function createLogDir()
+    {
+        if (!$this->directoryCreated) {
+            $dir = dirname($this->filename);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            $this->directoryCreated = true;
         }
-        fclose($file);
     }
 }
