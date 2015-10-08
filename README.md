@@ -6,7 +6,7 @@
 
 That is quite simple, have a look at the example daemon to get an idea what you need to implement.
 Create your own daemon handler and daemon handler factory be implementing `HandlerInterface` and `HandlerInterfaceFactory`.
-Setup your own startup php script, see `exampled.php` and copy your own init script to `etc/init.d/`, see `etc/exampled`.
+Setup your own startup php script, see `exampled.php` and copy your own init script to `/etc/init.d/`, see `etc/exampled`.
 
 Now you can control your daemon
 
