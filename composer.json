@@ -1,12 +1,14 @@
 {
     "name": "firegate666/daemon",
     "description": "Simple PHP daemon wrapper for your custom handler",
+    "homepage": "https://github.com/firegate666/SimpleDaemon",
     "type": "library",
     "license": "Apache-2.0",
     "authors": [
         {
             "name": "Marco Behnke",
-            "email": "marco@behnke.biz"
+            "email": "marco@behnke.biz",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "dev",
@@ -16,6 +18,7 @@
         }
     },
     "require": {
+        "php": ">=5.4.0",
         "psr/log" : "1.0.0"
     }
 }
