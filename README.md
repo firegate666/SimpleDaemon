@@ -49,3 +49,5 @@ If the daemon itself receives a shutdown signal (SIGTERM, SIGINT), this signal i
 ## ToDos
 
 - too many children died in short amount of time detection
+- proper log messages and levels
+- define guidelines for levels
