@@ -1,6 +1,6 @@
 {
     "name": "firegate666/daemon",
-    "description": "Simple PHP daemon wrapper for your custom handler",
+    "description": "Simple PHP daemon wrapper for your custom handler, integrates easily with initd or supervisor",
     "homepage": "https://github.com/firegate666/SimpleDaemon",
     "type": "library",
     "license": "Apache-2.0",
