@@ -25,7 +25,7 @@ Copy your own init script to `/etc/init.d/`, see `etc/init.d/exampled.daemon.sh`
 
 ### setup with supervisor
 
-Download and install Supervisord (http://supervisord.org/). On Ubuntu or similiar it is quite easy to use `apt-get install`.
+Download and install [Supervisord](http://supervisord.org/). On Ubuntu or similar it is quite easy to use `apt-get install`.
 Copy your supervisor configuration to `/etc/supervisor/conf.d/`, see `etc/supervisor/conf.d/exampled.conf`.
 Copy your own init script to `/etc/init.d/`, see `etc/init.d/exampled.supervisor.sh`.
 
