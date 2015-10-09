@@ -2,9 +2,20 @@
 
 ## What is this project about
 
+You have background tasks for your project?
+You want to code them in PHP?
+You need a simple framework to attach your tasks to?
+
+Please try out my wrapper for your daemon tasks.
+
 ## How to use it
 
 That is quite simple, have a look at the example daemon to get an idea what you need to implement.
+
+Integrate it via composer into project
+
+    composer require firegate666/daemon
+
 Create your own daemon handler and daemon handler factory be implementing `HandlerInterface` and `HandlerInterfaceFactory`.
 Setup your own startup php script, see `exampled.php`
 
