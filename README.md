@@ -6,7 +6,19 @@
 
 That is quite simple, have a look at the example daemon to get an idea what you need to implement.
 Create your own daemon handler and daemon handler factory be implementing `HandlerInterface` and `HandlerInterfaceFactory`.
-Setup your own startup php script, see `exampled.php` and copy your own init script to `/etc/init.d/`, see `etc/exampled`.
+Setup your own startup php script, see `exampled.php`
+
+### setup with start-stop-daemon
+
+Copy your own init script to `/etc/init.d/`, see `etc/init.d/exampled.daemon.sh`.
+
+### setup with supervisor
+
+Download and install Supervisord (http://supervisord.org/). On Ubuntu or similiar it is quite easy to use `apt-get install`.
+Copy your supervisor configuration to `/etc/supervisor/conf.d/`, see `etc/supervisor/conf.d/exampled.conf`.
+Copy your own init script to `/etc/init.d/`, see `etc/init.d/exampled.supervisor.sh`.
+
+### control it
 
 Now you can control your daemon
 
@@ -26,4 +38,3 @@ If the daemon itself receives a shutdown signal (SIGTERM, SIGINT), this signal i
 ## ToDos
 
 - too many children died in short amount of time detection
-- add supervisor example (http://supervisord.org/)
