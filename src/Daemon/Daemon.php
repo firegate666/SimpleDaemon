@@ -155,6 +155,8 @@ class Daemon
 
     /**
      * send signal to all children
+     *
+     * @param int $signo
      */
     protected function sendSignalToChildren($signo)
     {
