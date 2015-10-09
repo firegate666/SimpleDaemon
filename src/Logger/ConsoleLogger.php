@@ -17,6 +17,6 @@ class ConsoleLogger extends AbstractSimpleLogger
      */
     public function log($level, $message, array $context = array())
     {
-        print $level . ': ' . $message . PHP_EOL;
+        print $this->wrapMessage($level, $message);
     }
 }

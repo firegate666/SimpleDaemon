@@ -117,4 +117,16 @@ abstract class AbstractSimpleLogger implements LoggerInterface
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
+
+    /**
+     * add time and newline
+     *
+     * @param mixed $level
+     * @param string $message
+     * @return string
+     */
+    protected function wrapMessage($level, $message)
+    {
+        return date('c') . ' ' . $level . ': ' . $message . PHP_EOL;
+    }
 }
